@@ -29,6 +29,11 @@ const Navbar = ({ title = "Code Analyzer" }) => {
               }} type="submit">
                    Logout
                </Button>
+               <Button variant="primary" onClick={()=>{
+                navigate("/projects",{replace:true});
+               }}>
+               </Button>
+
                </li>
                </>:
                <>
