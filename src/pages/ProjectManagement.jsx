@@ -152,9 +152,12 @@ const ProjectManagement = () => {
       const res = await fetch(`http://localhost:4000/api/folders/${id}`, {
         method: 'DELETE',
         headers: {
-          "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ projectId }) // Include projectId in the body
       });
+  
       if (res.ok) {
         const updatedProjects = projects.map(p =>
           p._id === projectId
@@ -167,12 +170,8 @@ const ProjectManagement = () => {
       console.error("Error deleting folder:", error);
     }
   };
-
-  // Navigate to Home component for code analysis
-  const navigateToHome = (folderId) => {
-    navigate(`/`);
-  };
-
+  
+  
   return (
     <Container>
       <Card className="mt-5">
