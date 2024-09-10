@@ -61,7 +61,7 @@ const Home = () => {
 
   const handleFileClick = async (id) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/home/${id}`, {
+      const res = await fetch(`http://localhost:4000/api/home/${id}`, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         }
