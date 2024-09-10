@@ -21,6 +21,10 @@ const Navbar = ({ title = "Code Analyzer" }) => {
             <ul className="navbar-nav ms-auto">
           {user ? <> <li>
               <Button variant="primary" onClick={()=>{
+                navigate("/",{replace:true});
+               }}>Home
+               </Button>
+              <Button variant="primary" onClick={()=>{
                 navigate("/projects",{replace:true});
                }}>Files Maked
                </Button>
