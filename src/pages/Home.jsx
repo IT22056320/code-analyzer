@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
 import { Button, Form, Modal, Card, Container, Row, Col, ListGroup, Tooltip, OverlayTrigger } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext.jsx';
 import ToastContext from '../context/ToastContext.jsx';
 import '../App.css';
@@ -265,6 +265,24 @@ const Home = () => {
                   >
                     {updateMode ? "Update Code" : "Analyze Code"}
                   </Button>
+
+ 
+                 <Link to="/manage-rules">
+                 <Button
+                    type="submit"
+                    variant={"primary"}
+                    style={{ 
+                      width: '100%', 
+                      borderRadius: '15px', 
+                      boxShadow: '0px 4px 8px rgba(0,0,0,0.2)',
+                      marginTop:"20px",
+                      
+                    }}
+                  >
+                    Manage Rules
+                  </Button>
+                 </Link>
+                  
                 </Form>
                 {analysisResult && (
                   <Card className="mt-4" style={{ borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0,0,0,0.15)' }}>

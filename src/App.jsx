@@ -8,6 +8,8 @@ import Register from './pages/Register';
 import { AuthContextProvider } from './context/AuthContext';
 import { ToastContextProvider } from './context/ToastContext';
 import CodeAnalyzer from './pages/CodeAnalyzer';
+import ManageRules from './pages/ManageRules';
+import OutputAnalysis from './pages/OutputAnalysis';
 
 const App = () => {
   return (
@@ -20,6 +22,8 @@ const App = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/code-analyzer" element={<CodeAnalyzer/>}/>
+        <Route path="/manage-rules" element={<ManageRules />} />
+        <Route path="/manage-output" element={<OutputAnalysis />} />
     </Switch>
  
     </Layout>
