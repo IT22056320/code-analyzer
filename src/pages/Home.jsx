@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext.jsx';
 import ToastContext from '../context/ToastContext.jsx';
 import '../App.css';
+import '../components/Navbar.jsx';
 
 const Home = () => {
   const navigate = useNavigate();
