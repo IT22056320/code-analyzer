@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { Nav, Button } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthContext';
 import ToastContext from '../context/ToastContext';
+import logo from '../assets/logo.png'
 
 const Navbar = ({ title = "Code Analyzer" }) => {
   const { user, setUser } = useContext(AuthContext);

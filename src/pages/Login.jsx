@@ -12,6 +12,7 @@ const Login = () =>{
         email:"",
         password:"",
     });
+    
 
 
     const handleInputChange = (event)=>{
@@ -47,6 +48,11 @@ const Login = () =>{
          placeholder="Enter email"
          onChange={handleInputChange}
          required
+         style={{ 
+          borderRadius: '15px',
+          boxShadow: 'inset 0px 2px 4px rgba(0,0,0,0.1)',
+          width: '500px'
+        }}
          />
         <Form.Text className="text-muted">
           We'll never share your email with anyone else.
@@ -62,10 +68,19 @@ const Login = () =>{
          placeholder="Password"
          onChange={handleInputChange}
          required
+         style={{ 
+          borderRadius: '15px',
+          boxShadow: 'inset 0px 2px 4px rgba(0,0,0,0.1)',
+          width: '500px'
+        }}
          />
       </Form.Group>
      
-      <Button variant="primary" type="submit">
+      <Button type="submit"
+      style={{
+        borderRadius: '15px',
+        boxShadow: '0px 4px 8px rgba(0,0,0,0.2)'
+      }}>
         Login
       </Button>
       <p>Don't have an account? <Link to="/register">Create One</Link></p>
