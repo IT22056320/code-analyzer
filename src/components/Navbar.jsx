@@ -28,7 +28,8 @@ const Navbar = ({ title = "Code Analyzer" }) => {
                 toast.success("Logged Out");
                 navigate("/login",{replace:true});
 
-              }} type="submit">
+              }} type="submit"
+              style={{ borderRadius: '15px' }}>
                    Logout
                </Button>
                </li>
