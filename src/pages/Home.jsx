@@ -33,7 +33,7 @@ const Home = () => {
     const checkAuthentication = () => {
       const storedUser = JSON.parse(localStorage.getItem('user'));
       if (!storedUser) {
-        navigate('/', { replace: true });
+        navigate('/login', { replace: true });
       }
     };
 
