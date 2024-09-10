@@ -21,6 +21,10 @@ const Navbar = ({ title = "Code Analyzer" }) => {
             <ul className="navbar-nav ms-auto">
           {user ? <> <li>
               <Button variant="primary" onClick={()=>{
+                navigate("/projects",{replace:true});
+               }}>Files Maked
+               </Button>
+              <Button variant="primary" onClick={()=>{
                 setUser(null);
                 localStorage.clear();
                 toast.success("Logged Out");
@@ -28,10 +32,6 @@ const Navbar = ({ title = "Code Analyzer" }) => {
 
               }} type="submit">
                    Logout
-               </Button>
-               <Button variant="primary" onClick={()=>{
-                navigate("/projects",{replace:true});
-               }}>
                </Button>
 
                </li>

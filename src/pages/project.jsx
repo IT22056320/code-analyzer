@@ -1,122 +1,221 @@
-import React, { useState } from 'react';
-import { FaFolder, FaTrash, FaEdit } from 'react-icons/fa'; // Import icons
-import { ToastContainer, toast } from 'react-toastify'; // Import Toast for notifications
-import 'react-toastify/dist/ReactToastify.css'; // Import toastify CSS
+import React, { useEffect, useState, useContext } from 'react';
+import { Card, Container, Row, Col, Button, Modal, Form } from 'react-bootstrap';
+import AuthContext from '../context/AuthContext.jsx';
+import ToastContext from '../context/ToastContext.jsx';
+import '../App.css';
 
-const FileManagementSystem = () => {
-  const [folders, setFolders] = useState([]);
-  const [currentFolder, setCurrentFolder] = useState(null);
-  const [newFolderName, setNewFolderName] = useState('');
-  const [renameFolderName, setRenameFolderName] = useState('');
-  const [selectedFolder, setSelectedFolder] = useState(null);
+const project = () => {
+  const { user } = useContext(AuthContext);
+  const { toast } = useContext(ToastContext);
+  const [history, setHistory] = useState([]);
+  const [selectedCode, setSelectedCode] = useState(null);
+  const [editModalShow, setEditModalShow] = useState(false);
+  const [deleteModalShow, setDeleteModalShow] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [newCode, setNewCode] = useState('');
+  const [newFileName, setNewFileName] = useState('');
 
-  const createFolder = () => {
-    if (newFolderName.trim()) {
-      setFolders([...folders, { name: newFolderName, subfolders: [] }]);
-      setNewFolderName('');
+  useEffect(() => {
+    const fetchHistory = async () => {
+      try {
+        const res = await fetch(`http://localhost:4000/api/project`, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        const data = await res.json();
+        if (data.success) {
+          setHistory(data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching history:", error);
+        toast.error("Failed to fetch data.");
+      }
+    };
+    fetchHistory();
+  }, [toast]);
+
+  const handleShowCode = (code) => {
+    setSelectedCode(code);
+  };
+
+  const handleEdit = async () => {
+    try {
+      const res = await fetch(`http://localhost:4000/api/project/${selectedFile._id}`, {
+        method: 'PATCH',
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ fileName: newFileName, code: newCode })
+      });
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success("File updated successfully!");
+        setEditModalShow(false);
+        const res = await fetch(`http://localhost:4000/api/project`, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        const result = await res.json();
+        if (result.success) {
+          setHistory(result.data);
+        }
+      }
+    } catch (error) {
+      console.error("Error updating file:", error);
+      toast.error("Failed to update file.");
     }
   };
 
-  const openFolder = (folder) => {
-    setCurrentFolder(folder);
-  };
-
-  const renameFolder = (folder) => {
-    const newName = prompt("Enter new folder name", folder.name);
-    if (newName && newName.trim()) {
-      const updatedFolders = folders.map(f =>
-        f.name === folder.name ? { ...f, name: newName } : f
-      );
-      setFolders(updatedFolders);
-      toast.success(`Folder renamed to "${newName}"`);
-    } else {
-      toast.error("Rename operation cancelled");
+  const handleDelete = async () => {
+    try {
+      const res = await fetch(`http://localhost:4000/api/project/${selectedFile._id}`, {
+        method: 'DELETE',
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      });
+      const data = await res.json();
+      if (data.success) {
+        toast.success("File deleted successfully!");
+        setDeleteModalShow(false);
+        const res = await fetch(`http://localhost:4000/api/project`, {
+          headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+          }
+        });
+        const result = await res.json();
+        if (result.success) {
+          setHistory(result.data);
+        }
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting file:", error);
+      toast.error("Failed to delete file.");
     }
-  };
-
-  const deleteFolder = (folderToDelete) => {
-    const updatedFolders = folders.filter(folder => folder.name !== folderToDelete.name);
-    setFolders(updatedFolders);
-    toast.info(`Folder "${folderToDelete.name}" deleted`);
   };
 
   return (
-    <div>
-      <h1>Professional File Management System</h1>
-
-      {/* Input to create a new folder */}
-      <div>
-        <input
-          type="text"
-          placeholder="New Folder Name"
-          value={newFolderName}
-          onChange={(e) => setNewFolderName(e.target.value)}
-        />
-        <button onClick={createFolder}>Create Folder</button>
-      </div>
-
-      {/* Folder List */}
-      <div>
-        {currentFolder ? (
-          <div>
-            <h2>Inside {currentFolder.name}</h2>
-            <button onClick={() => setCurrentFolder(null)}>Back</button>
-            {currentFolder.subfolders.length === 0 && <p>No subfolders</p>}
-            <div>
-              {currentFolder.subfolders.map((subfolder, index) => (
-                <div key={index} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <FaFolder size={20} /> {/* Folder icon */}
-                  <span>{subfolder.name}</span>
-                  <FaEdit
-                    size={16}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => renameFolder(subfolder)}
-                  /> {/* Rename icon */}
-                  <FaTrash
-                    size={16}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => deleteFolder(subfolder)}
-                  /> {/* Delete icon */}
-                </div>
-              ))}
-            </div>
-          </div>
+    <Container fluid className="py-4">
+      <Row className="mb-4">
+        <Col md={12} className="text-center">
+          <h2 className="mb-4 text-primary">File Gallery</h2>
+        </Col>
+      </Row>
+      <Row className="g-4">
+        {history.length > 0 ? (
+          history.map((item) => (
+            <Col md={4} lg={3} key={item._id}>
+              <Card 
+                className="border-0 rounded shadow-sm hover-shadow" 
+                style={{ cursor: 'pointer' }}
+                onClick={() => handleShowCode(item.code)}
+              >
+                <Card.Body>
+                  <Card.Title className="text-center">{item.fileName}</Card.Title>
+                </Card.Body>
+                <Card.Footer className="d-flex justify-content-between align-items-center">
+                  <Button 
+                    variant="outline-primary" 
+                    size="sm" 
+                    onClick={() => {
+                      setSelectedFile(item);
+                      setNewFileName(item.fileName);
+                      setNewCode(item.code);
+                      setEditModalShow(true);
+                    }}
+                  >
+                    Edit
+                  </Button>
+                  <Button 
+                    variant="outline-danger" 
+                    size="sm" 
+                    onClick={() => {
+                      setSelectedFile(item);
+                      setDeleteModalShow(true);
+                    }}
+                  >
+                    Delete
+                  </Button>
+                </Card.Footer>
+              </Card>
+            </Col>
+          ))
         ) : (
-          <div>
-            <h2>Root Folders</h2>
-            {folders.length === 0 && <p>No folders</p>}
-            <div>
-              {folders.map((folder, index) => (
-                <div key={index} style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-                  <FaFolder
-                    size={20}
-                    style={{ cursor: 'pointer' }}
-                    onClick={() => openFolder(folder)}
-                  /> {/* Folder icon */}
-                  <span onClick={() => openFolder(folder)} style={{ cursor: 'pointer' }}>
-                    {folder.name}
-                  </span>
-                  <FaEdit
-                    size={16}
-                    style={{ cursor: 'pointer', marginLeft: '10px' }}
-                    onClick={() => renameFolder(folder)}
-                  /> {/* Rename icon */}
-                  <FaTrash
-                    size={16}
-                    style={{ cursor: 'pointer', marginLeft: '10px' }}
-                    onClick={() => deleteFolder(folder)}
-                  /> {/* Delete icon */}
-                </div>
-              ))}
-            </div>
-          </div>
+          <Col md={12} className="text-center">
+            <p>No files available</p>
+          </Col>
         )}
-      </div>
+      </Row>
 
-      {/* Toast container for notifications */}
-      <ToastContainer />
-    </div>
+      {selectedCode && (
+        <Row className="mt-5">
+          <Col md={12}>
+            <h4 className="mb-3 text-secondary">Code Preview</h4>
+            <pre className="code-box bg-light p-3 rounded">{selectedCode}</pre>
+          </Col>
+        </Row>
+      )}
+
+      <Modal show={editModalShow} onHide={() => setEditModalShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Edit File</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group controlId="formFileName">
+              <Form.Label>File Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={newFileName}
+                onChange={(e) => setNewFileName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group controlId="formCode" className="mt-3">
+              <Form.Label>Code</Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={10}
+                value={newCode}
+                onChange={(e) => setNewCode(e.target.value)}
+              />
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setEditModalShow(false)}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={handleEdit}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={deleteModalShow} onHide={() => setDeleteModalShow(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this file?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setDeleteModalShow(false)}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
+    </Container>
   );
 };
 
-export default FileManagementSystem;
+export default project;
