@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Register from './pages/Register'; 
 import { AuthContextProvider } from './context/AuthContext';
 import { ToastContextProvider } from './context/ToastContext';
+import CodeAnalyzer from './pages/CodeAnalyzer';
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
     <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/code-analyzer" element={<CodeAnalyzer/>}/>
     </Switch>
  
     </Layout>
