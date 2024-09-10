@@ -1,0 +1,7 @@
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh; /* Make sure the body takes up the full viewport height */
+    background: linear-gradient(135deg, #F9DBBA, #1F316F); /* Adjust gradient direction and colors as needed */
+  }
+  
