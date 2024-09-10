@@ -64,7 +64,7 @@ export const AuthContextProvider = ({children}) =>{
             
             setUser(result.user);
             toast.success(`Logged in ${result.user.name}`);
-            navigate("/", { replace: true }); // Navigate to homepage
+            navigate("/project-management", { replace: true }); // Navigate to homepage
           }else{
             toast.error(result.error);
           }

@@ -10,6 +10,7 @@ import { ToastContextProvider } from './context/ToastContext';
 import CodeAnalyzer from './pages/CodeAnalyzer';
 import ManageRules from './pages/ManageRules';
 import OutputAnalysis from './pages/OutputAnalysis';
+import ProjectManagement from './pages/ProjectManagement';
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
         <Route path="/code-analyzer" element={<CodeAnalyzer/>}/>
         <Route path="/manage-rules" element={<ManageRules />} />
         <Route path="/manage-output" element={<OutputAnalysis />} />
+        <Route path="/project-management" element={<ProjectManagement />} />
       
     </Switch>
  

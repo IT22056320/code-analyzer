@@ -35,6 +35,11 @@ const Navbar = ({ title = "Code Analyzer" }) => {
                   </Nav.Link>
                 </li>
                 <li className="nav-item">
+                  <Nav.Link as={Link} to="/project-management" style={{ marginLeft: '10px',color:'black' }}>
+                    Project Management
+                  </Nav.Link>
+                </li>
+                <li className="nav-item">
                   <Button
                     variant="primary"
                     onClick={handleLogout}
