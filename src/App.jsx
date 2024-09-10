@@ -1,12 +1,16 @@
 import {Routes as Switch,Route} from 'react-router-dom'
 
 import Layout from "./components/Layout";
-import Project from "./pages/project";
+
 import Home from './pages/Home'; 
 import Login from './pages/Login'; 
 import Register from './pages/Register'; 
 import { AuthContextProvider } from './context/AuthContext';
 import { ToastContextProvider } from './context/ToastContext';
+//import CodeAnalyzer from './pages/CodeAnalyzer';
+//import ManageRules from './pages/ManageRules';
+//import OutputAnalysis from './pages/OutputAnalysis';
+import ProjectManagement from './pages/ProjectManagement';
 
 const App = () => {
   return (
@@ -18,7 +22,9 @@ const App = () => {
     <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/projects" element={<Project />} />
+        
+        <Route path="/project-management" element={<ProjectManagement />} />
+      
     </Switch>
  
     </Layout>

@@ -1,0 +1,37 @@
+/* App.css */
+
+.card-custom {
+  border: 2px solid #0600ab; /* Blue border */
+  box-shadow: 0 4px 8px rgba(0, 0, 86, 0.549); /* Custom shadow color */
+  background: linear-gradient(135deg, #a5b6c3, #e6f1fa);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card-custom:hover {
+  transform: scale(1.02); /* Slightly scale up on hover */
+  box-shadow: 0 6px 12px rgba(17, 0, 255, 0.5); /* Darker shadow on hover */
+  background-color: #0600ab;
+}
+
+.code-box {
+  background-color: #cdd6df; /* Light background for code preview */
+  border: 1px solid #b9d0e8; /* Light border */
+  color: #343a40; /* Dark text color */
+  padding: 1rem;
+  border-radius: 0.375rem;
+  font-family: 'Courier New', Courier, monospace; /* Monospace font for code */
+}
+
+.modal-custom .modal-content {
+  border-radius: 0.5rem;
+  border: 1px solid #007bff; /* Blue border for modal */
+}
+
+.modal-custom .modal-header {
+  background-color: #007bff; /* Blue background for header */
+  color: white;
+}
+
+.modal-custom .modal-footer {
+  border-top: 1px solid #007bff; /* Blue border for footer */
+}
