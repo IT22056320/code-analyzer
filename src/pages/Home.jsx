@@ -195,6 +195,7 @@ const Home = () => {
 
   return (
     <Container>
+        <h1 className="text-center mt-4">Welcome, {user?.name || "Guest"}!</h1>
       <Row>
         <Col md={8} className="mx-auto">
           <div style={{ 

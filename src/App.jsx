@@ -24,6 +24,7 @@ const App = () => {
         <Route path="/code-analyzer" element={<CodeAnalyzer/>}/>
         <Route path="/manage-rules" element={<ManageRules />} />
         <Route path="/manage-output" element={<OutputAnalysis />} />
+      
     </Switch>
  
     </Layout>
