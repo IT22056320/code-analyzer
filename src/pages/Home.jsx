@@ -43,7 +43,7 @@ const Home = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const res = await fetch(`http://localhost:8000/api/home`, {
+        const res = await fetch(`http://localhost:4000/api/home`, {
           headers: {
             "Authorization": `Bearer ${localStorage.getItem("token")}`
           }
@@ -79,7 +79,7 @@ const Home = () => {
 
   const handleDelete = async (id) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/home/${id}`, {
+      const res = await fetch(`http://localhost:4000/api/home/${id}`, {
         method: "DELETE",
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
@@ -132,7 +132,7 @@ const Home = () => {
     }
 
     try {
-      const res = await fetch(`http://localhost:8000/api/home`, {
+      const res = await fetch(`http://localhost:4000/api/home`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -161,7 +161,7 @@ const Home = () => {
       return;
     }
     try {
-      const res = await fetch(`http://localhost:8000/api/home/${selectedCode._id}`, {
+      const res = await fetch(`http://localhost:4000/api/home/${selectedCode._id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
