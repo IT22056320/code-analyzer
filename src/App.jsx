@@ -11,6 +11,7 @@ import { ToastContextProvider } from './context/ToastContext';
 //import ManageRules from './pages/ManageRules';
 //import OutputAnalysis from './pages/OutputAnalysis';
 import ProjectManagement from './pages/ProjectManagement';
+import File from './pages/project';
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
     <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        
+        <Route path="/fils" element={<File />}/>
         <Route path="/project-management" element={<ProjectManagement />} />
       
     </Switch>

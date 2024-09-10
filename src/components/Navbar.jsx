@@ -33,6 +33,9 @@ const Navbar = ({ title = "Code Analyzer" }) => {
                   <Nav.Link as={Link} to="/code-analyzer" style={{ marginLeft: '10px',color:'black' }}>
                     AI Model
                   </Nav.Link>
+                  <Nav.Link as={Link} to="/fils" style={{ marginLeft: '10px',color:'black' }}>
+                    Files
+                  </Nav.Link>
                 </li>
                 <li className="nav-item">
                   <Nav.Link as={Link} to="/project-management" style={{ marginLeft: '10px',color:'black' }}>
