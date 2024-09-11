@@ -103,16 +103,19 @@ const Home = () => {
     event.preventDefault();
     setError(""); // Reset error state
 
-    // Validation checks
-    if (!newAnalyze.fileName ) {
-      setError("Filename is required.");
-      return;
-    }
+  // Validation checks
+  if (!newAnalyze.fileName ) {
+    setError("Filename is required.");
+    return;
+  } else if (!newAnalyze.fileName || !newAnalyze.code) {
+    setError("Both Filename and code are required.");
+    return;
+  }
 
-    if (!newAnalyze.code) {
-      setError1("Code is required.");
-      return;
-    }
+  if (!newAnalyze.code) {
+    setError1("Code is required.");
+    return;
+    }
 
     if (!newAnalyze.fileName.endsWith('.js')) {
       setError("Filename must end with '.js'.");
@@ -195,7 +198,7 @@ const Home = () => {
 
   return (
     <Container>
-        <h1 className="text-center mt-4">Welcome, {user?.name || "Guest"}!</h1>
+       
       <Row>
         <Col md={8} className="mx-auto">
           <div style={{ 
