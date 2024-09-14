@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form, ListGroup, Container, Card, Modal } from 'react-bootstrap';
+import { Button, Form, Card, Modal, Row, Col, Container } from 'react-bootstrap';
+import { FaPlus, FaEdit, FaTrash, FaFolderPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 
 const ProjectManagement = () => {
   const [projects, setProjects] = useState([]);
-  const [folders, setFolders] = useState([]);
   const [projectName, setProjectName] = useState('');
   const [newFolderName, setNewFolderName] = useState('');
-  const [editProjectId, setEditProjectId] = useState(null); // To handle project edit
-  const [editFolderId, setEditFolderId] = useState(null); // To handle folder edit
-  const [showProjectModal, setShowProjectModal] = useState(false); // To handle project edit modal
-  const [showFolderModal, setShowFolderModal] = useState(false); // To handle folder edit modal
-  const navigate = useNavigate(); 
+  const [editProjectId, setEditProjectId] = useState(null);
+  const [editFolderId, setEditFolderId] = useState(null);
+  const [showProjectModal, setShowProjectModal] = useState(false);
+  const [showFolderModal, setShowFolderModal] = useState(false);
+  const [activeProjectId, setActiveProjectId] = useState(null); // Track which project to add folder to
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProjects();
@@ -34,8 +35,8 @@ const ProjectManagement = () => {
   };
 
   const handleCreateProject = async () => {
-    if (!projectName) return; // Ensure project name is not empty
-  
+    if (!projectName) return;
+
     try {
       const res = await fetch('http://localhost:4000/api/projects', {
         method: 'POST',
@@ -43,21 +44,22 @@ const ProjectManagement = () => {
           "Content-Type": "application/json",
           "Authorization": `Bearer ${localStorage.getItem("token")}`
         },
-        body: JSON.stringify({ name: projectName, userId: "USER_ID_FROM_LOCAL_STORAGE_OR_STATE" }),
+        body: JSON.stringify({ name: projectName }),
       });
       const data = await res.json();
       if (data.success) {
         setProjects([...projects, data.data]);
         setProjectName('');
+        setShowProjectModal(false);
       }
     } catch (error) {
       console.error("Error creating project:", error);
     }
   };
-  
 
   const handleUpdateProject = async (id) => {
-    if (!projectName) return; // Validation
+    if (!projectName) return;
+
     try {
       const res = await fetch(`http://localhost:4000/api/projects/${id}`, {
         method: 'PUT',
@@ -96,7 +98,8 @@ const ProjectManagement = () => {
   };
 
   const handleCreateFolder = async (projectId) => {
-    if (!newFolderName) return; // Validation
+    if (!newFolderName) return;
+
     try {
       const res = await fetch('http://localhost:4000/api/folders', {
         method: 'POST',
@@ -113,6 +116,7 @@ const ProjectManagement = () => {
         );
         setProjects(updatedProjects);
         setNewFolderName('');
+        setShowFolderModal(false);
       }
     } catch (error) {
       console.error("Error creating folder:", error);
@@ -120,7 +124,8 @@ const ProjectManagement = () => {
   };
 
   const handleUpdateFolder = async (id, projectId) => {
-    if (!newFolderName) return; // Validation
+    if (!newFolderName) return;
+
     try {
       const res = await fetch(`http://localhost:4000/api/folders/${id}`, {
         method: 'PUT',
@@ -155,9 +160,9 @@ const ProjectManagement = () => {
           "Authorization": `Bearer ${localStorage.getItem("token")}`,
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ projectId }) // Include projectId in the body
+        body: JSON.stringify({ projectId })
       });
-  
+
       if (res.ok) {
         const updatedProjects = projects.map(p =>
           p._id === projectId
@@ -170,64 +175,77 @@ const ProjectManagement = () => {
       console.error("Error deleting folder:", error);
     }
   };
-  
-  
+
+  const navigateToHome = () => {
+    navigate(`/`);
+  };
+
   return (
     <Container>
-      <Card className="mt-5">
-        <Card.Header>Project Management</Card.Header>
-        <Card.Body>
-          <Form>
-            <Form.Group>
-              <Form.Label>Project Name</Form.Label>
-              <Form.Control
-                type="text"
-                value={projectName}
-                onChange={(e) => setProjectName(e.target.value)}
-              />
-            </Form.Group>
-            <Button onClick={handleCreateProject} className="mt-3">Create Project</Button>
-          </Form>
-
-          <ListGroup className="mt-4">
-            {projects.map((project) => (
-              <ListGroup.Item key={project._id}>
-                <h5>{project.name}</h5>
-                <Button variant="warning" onClick={() => { setEditProjectId(project._id); setShowProjectModal(true); }}>Edit Project</Button>
-                <Button variant="danger" className="ms-2" onClick={() => handleDeleteProject(project._id)}>Delete Project</Button>
-
-                <Form.Group className="mt-3">
-                  <Form.Label>New Folder</Form.Label>
-                  <Form.Control
-                    type="text"
-                    value={newFolderName}
-                    onChange={(e) => setNewFolderName(e.target.value)}
-                  />
-                </Form.Group>
-                <Button onClick={() => handleCreateFolder(project._id)} className="mt-2">
-                  Add Folder
+      <Row className="g-4">
+        {/* Display all projects */}
+        {projects.map((project) => (
+          <Col md={4} key={project._id}>
+            <Card className="shadow-sm" style={{ position: 'relative', backgroundColor: '#f9f9f9', borderRadius: '10px' }}>
+              <Card.Body>
+                <h5 className="text-primary">{project.name}</h5>
+                <Button variant="outline-secondary" className="me-2 btn-sm" onClick={() => { setEditProjectId(project._id); setShowProjectModal(true); }}>
+                  <FaEdit /> Edit
+                </Button>
+                <Button variant="outline-danger" className="btn-sm" onClick={() => handleDeleteProject(project._id)}>
+                  <FaTrash /> Delete
+                </Button>
+                <Button
+                  variant="outline-primary"
+                  className="btn-sm"
+                  style={{ position: 'absolute', top: '10px', right: '10px' }}
+                  onClick={() => { setActiveProjectId(project._id); setShowFolderModal(true); }}
+                >
+                  <FaFolderPlus /> Add Folder
                 </Button>
 
-                <ListGroup className="mt-3">
+                <div className="mt-3">
+                  <h6 className="text-secondary">Folders:</h6>
                   {project.folders && project.folders.map((folder) => (
-                    <ListGroup.Item key={folder._id}>
-                      {folder.name}
-                      <Button variant="warning" onClick={() => { setEditFolderId(folder._id); setShowFolderModal(true); }}>Edit Folder</Button>
-                      <Button variant="danger" className="ms-2" onClick={() => handleDeleteFolder(folder._id, project._id)}>Delete Folder</Button>
-                      <Button className="ms-2" onClick={() => navigateToHome(folder._id)}>Analyze Code</Button>
-                    </ListGroup.Item>
+                    <Card key={folder._id} className="mb-2 border-0 shadow-sm" style={{ backgroundColor: '#ffffff', borderRadius: '8px' }}>
+                      <Card.Body>
+                        <div className="d-flex justify-content-between align-items-center">
+                          <span>{folder.name}</span>
+                          <div>
+                            <Button variant="outline-secondary" className="btn-sm me-2" onClick={() => { setEditFolderId(folder._id); setShowFolderModal(true); }}>
+                              <FaEdit />
+                            </Button>
+                            <Button variant="outline-danger" className="btn-sm me-2" onClick={() => handleDeleteFolder(folder._id, project._id)}>
+                              <FaTrash />
+                            </Button>
+                            <Button variant="outline-success" className="btn-sm" onClick={() => navigateToHome(folder._id)}>
+                              Analyze
+                            </Button>
+                          </div>
+                        </div>
+                      </Card.Body>
+                    </Card>
                   ))}
-                </ListGroup>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        </Card.Body>
-      </Card>
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
 
-      {/* Edit Project Modal */}
+        {/* Add new project */}
+        <Col md={4}>
+          <Card className="d-flex justify-content-center align-items-center shadow-sm" style={{ height: '150px', backgroundColor: '#e3f2fd', borderRadius: '10px' }}>
+            <Button variant="primary" onClick={() => setShowProjectModal(true)} style={{ fontSize: '50px', borderRadius: '50%' }}>
+              <FaPlus />
+            </Button>
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Project Modal */}
       <Modal show={showProjectModal} onHide={() => setShowProjectModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Project</Modal.Title>
+          <Modal.Title>{editProjectId ? 'Edit Project' : 'Create Project'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
@@ -236,19 +254,22 @@ const ProjectManagement = () => {
               type="text"
               value={projectName}
               onChange={(e) => setProjectName(e.target.value)}
+              placeholder="Enter project name"
             />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowProjectModal(false)}>Close</Button>
-          <Button variant="primary" onClick={() => handleUpdateProject(editProjectId)}>Save Changes</Button>
+          <Button variant="primary" onClick={editProjectId ? () => handleUpdateProject(editProjectId) : handleCreateProject}>
+            {editProjectId ? 'Save Changes' : 'Create Project'}
+          </Button>
         </Modal.Footer>
       </Modal>
 
-      {/* Edit Folder Modal */}
+      {/* Folder Modal */}
       <Modal show={showFolderModal} onHide={() => setShowFolderModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Edit Folder</Modal.Title>
+          <Modal.Title>{editFolderId ? 'Edit Folder' : 'Create Folder'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form.Group>
@@ -257,12 +278,15 @@ const ProjectManagement = () => {
               type="text"
               value={newFolderName}
               onChange={(e) => setNewFolderName(e.target.value)}
+              placeholder="Enter folder name"
             />
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowFolderModal(false)}>Close</Button>
-          <Button variant="primary" onClick={() => handleUpdateFolder(editFolderId, projects.find(p => p.folders.some(f => f._id === editFolderId))._id)}>Save Changes</Button>
+          <Button variant="primary" onClick={editFolderId ? () => handleUpdateFolder(editFolderId, activeProjectId) : () => handleCreateFolder(activeProjectId)}>
+            {editFolderId ? 'Save Changes' : 'Create Folder'}
+          </Button>
         </Modal.Footer>
       </Modal>
     </Container>

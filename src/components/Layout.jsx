@@ -1,3 +1,4 @@
+import Footer from "./Footer";
 import Navbar from "./Navbar";
 
 const Layout = ({navbar=true, children}) =>{
@@ -7,6 +8,7 @@ const Layout = ({navbar=true, children}) =>{
     <div className="container mt-3">
        {children}
         </div>
+        <Footer/>
         </>
         );
 }

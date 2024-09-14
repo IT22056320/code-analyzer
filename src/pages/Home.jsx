@@ -1,9 +1,10 @@
 import React, { useState, useEffect, useRef, useContext } from 'react';
-import { Button, Form, Modal, Card, Container, Row, Col, ListGroup } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { Button, Form, Modal, Card, Container, Row, Col, ListGroup, Tooltip, OverlayTrigger } from 'react-bootstrap';
+import { Link, useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext.jsx';
 import ToastContext from '../context/ToastContext.jsx';
 import '../App.css';
+import '../components/Navbar.jsx';
 
 const Home = () => {
   const navigate = useNavigate();
@@ -14,6 +15,11 @@ const Home = () => {
     fileName: "",
     code: "",
   });
+  const renderTooltip = (props, content) => (
+    <Tooltip id="button-tooltip" {...props}>
+      {content}
+    </Tooltip>
+  );
   const [analysisResult, setAnalysisResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [selectedCode, setSelectedCode] = useState(null);
@@ -97,16 +103,19 @@ const Home = () => {
     event.preventDefault();
     setError(""); // Reset error state
 
-    // Validation checks
-    if (!newAnalyze.fileName ) {
-      setError("Filename is required.");
-      return;
-    }
+  // Validation checks
+  if (!newAnalyze.fileName ) {
+    setError("Filename is required.");
+    return;
+  } else if (!newAnalyze.fileName || !newAnalyze.code) {
+    setError("Both Filename and code are required.");
+    return;
+  }
 
-    if (!newAnalyze.code) {
-      setError1("Code is required.");
-      return;
-    }
+  if (!newAnalyze.code) {
+    setError1("Code is required.");
+    return;
+    }
 
     if (!newAnalyze.fileName.endsWith('.js')) {
       setError("Filename must end with '.js'.");
@@ -189,6 +198,7 @@ const Home = () => {
 
   return (
     <Container>
+       
       <Row>
         <Col md={8} className="mx-auto">
           <div style={{ 
@@ -222,6 +232,7 @@ const Home = () => {
                       value={newAnalyze.fileName}
                       onChange={(e) => setNewAnalyze({ ...newAnalyze, fileName: e.target.value })}
                       disabled={updateMode}
+                      readOnly={updateMode}
                       style={{ 
                         borderRadius: '15px',
                         boxShadow: 'inset 0px 2px 4px rgba(0,0,0,0.1)'
@@ -258,6 +269,24 @@ const Home = () => {
                   >
                     {updateMode ? "Update Code" : "Analyze Code"}
                   </Button>
+
+ 
+                 <Link to="/manage-rules">
+                 <Button
+                    type="submit"
+                    variant={"primary"}
+                    style={{ 
+                      width: '100%', 
+                      borderRadius: '15px', 
+                      boxShadow: '0px 4px 8px rgba(0,0,0,0.2)',
+                      marginTop:"20px",
+                      
+                    }}
+                  >
+                    Manage Rules
+                  </Button>
+                 </Link>
+                  
                 </Form>
                 {analysisResult && (
                   <Card className="mt-4" style={{ borderRadius: '15px', boxShadow: '0px 4px 10px rgba(0,0,0,0.15)' }}>
@@ -269,9 +298,44 @@ const Home = () => {
                       <p><strong>Source Lines of Code (SLOC):</strong> {analysisResult.sloc}</p>
                       <p><strong>Comment Lines:</strong> {analysisResult.comments}</p>
                       <p><strong>Comment Percentage:</strong> {analysisResult.commentPercentage}%</p>
-                      <p><strong>Code to Comment Ratio:</strong> {analysisResult.codeToCommentRatio}</p>
-                      <p><strong>Cyclomatic Complexity:</strong> {analysisResult.cyclomaticComplexity}</p>
-                      <p><strong>Maintainability Index:</strong> {analysisResult.maintainabilityIndex}</p>
+
+                      <p>
+                        <strong>Code to Comment Ratio:</strong> {analysisResult.codeToCommentRatio}
+                      </p>
+
+                      {/* Tooltip for Cyclomatic Complexity */}
+                      <OverlayTrigger
+                        placement="right"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderTooltip(null, "Cyclomatic complexity measures the number of independent paths through a program's source code. It represents the number of decision points, such as if statements and loops. This metric helps assess the complexity of the code, guiding how many test cases are needed and indicating the potential difficulty in maintaining and understanding the code.\n\n1–10: Simple code, easy to maintain.\n11–20: Moderate complexity, may need some additional testing or refactoring.\n21–50: High complexity, code is becoming harder to maintain and test.\n50+: Very complex, likely to be error-prone and challenging to work with.")}
+                      >
+                        <p>
+                          <strong>Cyclomatic Complexity:</strong> {analysisResult.cyclomaticComplexity}
+                        </p>
+                      </OverlayTrigger>
+
+                      {/* Tooltip for Maintainability Index */}
+                      <OverlayTrigger
+                        placement="right"
+                        delay={{ show: 250, hide: 400 }}
+                        overlay={renderTooltip(null, "The maintainability index is a score ranging from 0 to 100 that quantifies how easy it is to maintain a piece of code. It combines various factors including cyclomatic complexity, lines of code, and other code metrics to provide an overall measure of code maintainability.\n\n0-20: Very difficult to maintain. Code is likely to be complex, poorly structured, and challenging to understand.\n21-40: Difficult to maintain. Code may require significant effort to modify or extend.\n41-60: Moderate maintainability. Code is manageable but could benefit from refactoring.\n61-80: Easy to maintain. Code is well-structured and should be relatively straightforward to work with.\n81-100: Very easy to maintain. Code is clear, well-organized, and easy to understand. Higher scores indicate better maintainability, meaning that the code is less likely to contain hidden bugs and is easier for developers to work with.")}
+                      >
+                        <p>
+                          <strong>Maintainability Index:</strong> {analysisResult.maintainabilityIndex}
+                        </p>
+                      </OverlayTrigger>
+
+                      <Button
+                        onClick={() => window.location.reload()}
+                        variant={updateMode ? "success" : "primary"}
+                        style={{
+                          width: '100%',
+                          borderRadius: '15px',
+                          boxShadow: '0px 4px 8px rgba(0,0,0,0.2)'
+                        }}
+                      >
+                        Ok
+                      </Button>
                     </Card.Body>
                   </Card>
                 )}

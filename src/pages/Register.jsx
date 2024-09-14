@@ -53,6 +53,11 @@ const Register = () =>{
          placeholder="Enter name"
          onChange={handleInputChange}
          required
+         style={{ 
+          borderRadius: '15px',
+          boxShadow: 'inset 0px 2px 4px rgba(0,0,0,0.1)',
+          width: '500px'
+        }}
          />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -64,6 +69,11 @@ const Register = () =>{
            value={credentials.email}
            onChange={handleInputChange}
            required
+           style={{ 
+            borderRadius: '15px',
+            boxShadow: 'inset 0px 2px 4px rgba(0,0,0,0.1)',
+            width: '500px'
+          }}
            />
         <Form.Text className="text-muted">
           We'll never share your email with anyone else.
@@ -79,6 +89,11 @@ const Register = () =>{
         value={credentials.password}
         onChange={handleInputChange}
         required
+        style={{ 
+          borderRadius: '15px',
+          boxShadow: 'inset 0px 2px 4px rgba(0,0,0,0.1)',
+          width: '500px'
+        }}
         />
       </Form.Group>
       <Form.Group className="mb-3" controlId="formBasicPassword">
@@ -90,9 +105,18 @@ const Register = () =>{
           value={credentials.confirmPassword}
           onChange={handleInputChange}
           required
+          style={{ 
+            borderRadius: '15px',
+            boxShadow: 'inset 0px 2px 4px rgba(0,0,0,0.1)',
+            width: '500px'
+          }}
           />
       </Form.Group>
-      <Button variant="primary" type="submit">
+      <Button type="submit"
+      style={{
+        borderRadius: '15px',
+        boxShadow: '0px 4px 8px rgba(0,0,0,0.2)'
+      }}>
         Register
       </Button>
       <p>Already have an account? <Link to="/login">Login</Link></p>
