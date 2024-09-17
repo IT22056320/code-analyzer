@@ -5,7 +5,7 @@ import { AuthContext } from '../context/AuthContext';
 import ToastContext from '../context/ToastContext';
 import logo from '../assets/logo.png';
 
-const Navbar = ({ title = "Code Analyzer" }) => {
+const Navbar = ({ title = "LogicLens" }) => {
   const { user, setUser } = useContext(AuthContext);
   const { toast } = useContext(ToastContext);
   const navigate = useNavigate();
