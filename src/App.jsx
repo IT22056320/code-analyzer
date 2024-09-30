@@ -15,12 +15,13 @@ import Main from './pages/Main';
 import AboutUs from './pages/AboutUs';
 import Resources from './pages/Resources';
 import AnalysisGraph from './pages/AnalysisGraph';
-
+import "./styles.css";
+import { ThemeProvider } from './context/ThemeContext';
 const App = () => {
   return (
     <ToastContextProvider>
     <AuthContextProvider>
-    
+    <ThemeProvider>
   <Layout>
     <Switch>
     <Route path="/" element={<Home />} />
@@ -37,7 +38,7 @@ const App = () => {
     </Switch>
  
     </Layout>
-    
+    </ThemeProvider>
     </AuthContextProvider>
     </ToastContextProvider>
     );

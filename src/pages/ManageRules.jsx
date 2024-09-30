@@ -8,15 +8,15 @@ const ManageRules = () => {
   const [searchTerm, setSearchTerm] = useState(""); // State to store the search term
   const [showForm, setShowForm] = useState(false);
   const [editingRule, setEditingRule] = useState(null); // Track the rule being edited
+  const [viewingRule, setViewingRule] = useState(null); // State for viewing a rule
+  const [showPopup, setShowPopup] = useState(false); // State for controlling popup
+
   const navigate = useNavigate();
 
   // Fetch rules from the backend with optional search term
   const fetchRules = async (searchTerm = "") => {
     try {
       const response = await fetch(`http://localhost:4000/api/?searchTerm=${searchTerm}`);
-      if (!response.ok) {
-        throw new Error("Error fetching rules");
-      }
       const data = await response.json();
       setRules(data);
     } catch (error) {
@@ -29,45 +29,27 @@ const ManageRules = () => {
     fetchRules();
   }, []);
 
+  // **Change:** Update addNewRule to append the new rule to the existing rules
+  const addNewRule = (newRule) => {
+    setRules((prevRules) => [...prevRules, newRule]); // Append the new rule to the state
+  };
+
   // Handle search input change and fetch filtered results
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value); // Update search term state
     fetchRules(e.target.value); // Fetch filtered rules based on search term
   };
 
-  // Add rule and re-fetch rules after adding
-  const addNewRule = async (rule) => {
-    try {
-      const response = await fetch("http://localhost:4000/api/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(rule),
-      });
-      if (!response.ok) {
-        throw new Error("Error adding rule");
-      }
-      fetchRules(); // Fetch updated rules after adding
-      setShowForm(false);
-    } catch (error) {
-      console.error("Error adding rule", error);
-    }
-  };
-
   // Toggle rule status
   const toggleStatus = async (id) => {
     try {
-      const response = await fetch(`/api/toggleStatus/${id}`, {
+      const response = await fetch(`http://localhost:4000/api/toggleStatus/${id}`, {
         method: "PUT",
       });
-      if (!response.ok) {
-        throw new Error("Error toggling status");
-      }
-      const updatedRule = await response.json();
+      const data = await response.json();
       setRules(
         rules.map((rule) =>
-          rule._id === id ? { ...rule, status: updatedRule.status } : rule
+          rule._id === id ? { ...rule, status: data.status } : rule
         )
       );
     } catch (error) {
@@ -85,14 +67,11 @@ const ManageRules = () => {
         },
         body: JSON.stringify(updatedRule),
       });
-      if (!response.ok) {
-        throw new Error("Error updating rule");
-      }
       const data = await response.json();
       setRules(rules.map((rule) => (rule._id === id ? data : rule)));
       setEditingRule(null); // Close the edit form after update
     } catch (error) {
-      console.error("Error updating rule", error);
+      console.error("Error updating rule:", error);
     }
   };
 
@@ -104,80 +83,40 @@ const ManageRules = () => {
   // Handle rule deletion
   const deleteRule = async (id) => {
     try {
-      const response = await fetch(`http://localhost:4000/api/${id}`, {
+      await fetch(`http://localhost:4000/api/${id}`, {
         method: "DELETE",
       });
-      if (!response.ok) {
-        throw new Error("Error deleting rule");
-      }
       fetchRules(); // Re-fetch rules after deletion
     } catch (error) {
       console.error("Error deleting rule", error);
     }
   };
 
+  const handleViewClick = (rule) => {
+    setViewingRule(rule); // Set the rule to view
+    setShowPopup(true); // Show the popup
+  };
+
   const handleOutput = () => {
-    navigate("/manage-output");
-  };
-
-  // Inline styles
-  const containerStyle = {
-    maxWidth: "1000px",
-    margin: "50px auto",
-  };
-
-  const topBarStyle = {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: "20px",
-  };
-
-  const buttonStyle = {
-    padding: "10px",
-    backgroundColor: "#007bff",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-  };
-
-  const searchInputStyle = {
-    padding: "8px",
-    width: "300px",
-    border: "1px solid #ddd",
-    borderRadius: "4px",
-  };
-
-  const tableStyle = {
-    width: "100%",
-    borderCollapse: "collapse",
-    marginTop: "20px",
-    backgroundColor: "white", // Add white background to the table
-    color: "black", // Make the text black
-  };
-
-  const tableCellStyle = {
-    border: "1px solid #ddd",
-    padding: "10px",
-    textAlign: "center",
+    // Navigate to the new page and pass the rules as state
+    navigate("/manage-output", { state: { rules } });
   };
 
   return (
-    <div style={containerStyle}>
+    <div className="manage-rules-container">
       <h1>Manage Rules</h1>
-      <div style={topBarStyle}>
-        <button style={buttonStyle} onClick={() => setShowForm(true)}>
-          Add Rule
+      <div className="top-bar">
+        <button className="add-rule-btn" onClick={() => setShowForm(true)}>
+          Add Code Rule
         </button>
         <input
           type="text"
-          style={searchInputStyle}
+          className="search-input"
           placeholder="Search by Rule Name or Rule ID"
           value={searchTerm}
           onChange={handleSearchChange} // Fetch filtered data as user types
         />
-        <button style={buttonStyle} onClick={handleOutput}>
+        <button className="analyze-output-btn" onClick={handleOutput}>
           Analyze Output
         </button>
       </div>
@@ -187,43 +126,59 @@ const ManageRules = () => {
       )}
 
       <h2>Existing Rules</h2>
-      <table style={tableStyle}>
+
+      <table className="rules-table">
         <thead>
           <tr>
-            <th style={tableCellStyle}>RuleID</th>
-            <th style={tableCellStyle}>Rule Name</th>
-            <th style={tableCellStyle}>Description</th>
-            <th style={tableCellStyle}>Condition</th>
-            <th style={tableCellStyle}>Threshold</th>
-            <th style={tableCellStyle}>Status</th>
-            <th style={tableCellStyle}>Actions</th>
+            <th>RuleID</th>
+            <th>Rule Name</th>
+            <th>Description</th>
+            <th>Condition</th>
+            <th>Threshold</th>
+            <th>Status</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           {rules.map((rule) => (
             <tr key={rule._id}>
-              <td style={tableCellStyle}>{rule.ruleID}</td> {/* Display RuleID */}
-              <td style={tableCellStyle}>{rule.ruleName}</td>
-              <td style={tableCellStyle}>{rule.description}</td>
-              <td style={tableCellStyle}>{rule.condition}</td>
-              <td style={tableCellStyle}>{rule.threshold}</td>
-              <td style={tableCellStyle}>
+              <td>{rule.ruleID}</td> {/* Display RuleID */}
+              <td>{rule.ruleName}</td>
+              <td>{rule.description}</td>
+              <td>{rule.condition}</td>
+              <td>{rule.threshold}</td>
+              <td>
                 <button
                   onClick={() => toggleStatus(rule._id)}
                   style={{
                     backgroundColor: rule.status === "active" ? "green" : "red",
                     color: "white",
-                    borderRadius: "4px",
-                    border: "none",
-                    padding: "5px 10px",
                   }}
                 >
                   {rule.status === "active" ? "Active" : "Inactive"}
                 </button>
               </td>
-              <td style={tableCellStyle}>
-                <button style={buttonStyle} onClick={() => handleUpdateClick(rule)}>Update</button>
-                <button style={buttonStyle} onClick={() => deleteRule(rule._id)}>Delete</button>
+              <td>
+                <div className="action-buttons">
+                  <button
+                    className="view-btn"
+                    onClick={() => handleViewClick(rule)}
+                  >
+                    View
+                  </button>
+                  <button
+                    className="update-btn"
+                    onClick={() => handleUpdateClick(rule)}
+                  >
+                    Update
+                  </button>
+                  <button
+                    className="delete-btn"
+                    onClick={() => deleteRule(rule._id)}
+                  >
+                    Delete
+                  </button>
+                </div>
               </td>
             </tr>
           ))}
@@ -236,6 +191,29 @@ const ManageRules = () => {
           updateRule={updateRule}
           cancelEdit={() => setEditingRule(null)}
         />
+      )}
+      {showPopup && viewingRule && (
+        <div className="popup">
+          <div className="popup-content">
+            <h2>View Rule</h2>
+            <p>
+              <strong>Rule Name:</strong> {viewingRule.ruleName}
+            </p>
+            <p>
+              <strong>Description:</strong> {viewingRule.description}
+            </p>
+            <p>
+              <strong>Condition:</strong> {viewingRule.condition}
+            </p>
+            <p>
+              <strong>Threshold:</strong> {viewingRule.threshold}
+            </p>
+            <p>
+              <strong>Status:</strong> {viewingRule.status}
+            </p>
+            <button onClick={() => setShowPopup(false)}>Close</button>
+          </div>
+        </div>
       )}
     </div>
   );

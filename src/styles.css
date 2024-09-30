@@ -1,229 +1,342 @@
 /* src/styles.css */
+/*ManageRules.js*/
 
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f4f4f4;
+.manage-rules-container {
+  max-width: 1200px;
+  margin: 40px auto;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.add-rule-btn, .analyze-output-btn {
+  padding: 10px;
+  background-color: #1876da;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.add-rule-btn:hover, .analyze-output-btn:hover {
+  background-color: #0056b3; /* Darker blue for hover */
+  transform: scale(1.10); /* Slight scaling effect */
+}
+
+.add-rule-btn:active, .analyze-output-btn:active {
+  transform: scale(1); /* Reset scale when clicked */
+}
+
+.search-input {
+  padding: 8px;
+  width: 300px;
+  border: 1px solid #000000;
+  border-radius: 4px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:hover {
+  border-color: #007bff; /* Change border to blue on hover */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a soft blue shadow */
+}
+
+.search-input:focus {
+  border-color: #007bff; /* Keep the blue border when focused */
+  outline: none;
+  box-shadow: 0 0 8px rgba(0, 123, 255, 0.7); /* Stronger shadow on focus */
+}
+
+.rules-table {
+  color: rgb(0, 0, 0);
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.rules-table th {
+  background-color: #f2f2f2;
+}
+
+.rules-table th, .rules-table td {
+  border: 1px solid #8c8a8a;
+  padding: 10px;
+  text-align: left;
+}
+
+/* Base button styling */
+.action-buttons {
+  display: flex;
+  gap: 10px; /* Space between Update and Delete buttons */
+}
+
+.action-buttons button {
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  color:black;
+  transition: all 0.3s ease;
+  /*background-color: transparent;*/
+  font-weight: bold; /* No background color */
+}
+
+/* View Button Styling */
+.view-btn {
+  border: 2px solid #c1ba36;
+  background-color: #e5d68b;
+}
+
+.view-btn:hover {
+  border: 2px solid #151408;
+  background-color: #8e7c25;
+  color: white;
+}
+/* Update Button Styling */
+.update-btn {
+  border: 2px solid #007bff;
+  background-color: #8bace5;
+}
+
+.update-btn:hover {
+  border: 2px solid #151408;
+  background-color: #395b80;
+  color: white;
+}
+
+/* Delete Button Styling */
+.delete-btn {
+  border: 2px solid #dc3545;
+  background-color: #e58c8b;
+}
+
+.delete-btn:hover {
+  border: 2px solid #151408;
+  background-color: #a32632;
+  color: white;
+}
+
+/* Pop-up background overlay */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7); /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999; /* Ensures the pop-up appears above everything else */
+}
+
+/* Pop-up content box */
+.popup-content {
+  background-color: white;
+  padding: 20px;
+  width: 400px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for a raised effect */
+  text-align: left;
+  animation: fadeIn 0.3s ease; /* Smooth fade-in effect */
+}
+
+/* Heading styling */
+.popup-content h2 {
+  margin-bottom: 15px;
+  font-size: 24px;
+  color: #333;
+}
+
+/* Paragraph and labels styling */
+.popup-content p {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* Strong element for labels */
+.popup-content p strong {
+  color: #007bff; /* Highlighted blue color for labels */
+}
+
+/* Close button styling */
+.popup-content button {
+  padding: 10px 15px;
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the close button */
+.popup-content button:hover {
+  background-color: #c82333; /* Slightly darker red on hover */
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
   }
-  
-  .container {
-    max-width: 800px;
-    margin: 50px auto;
-    text-align: center;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .code-input {
-    width: 100%;
-    height: 200px;
-    margin: 20px 0;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .analyze-btn {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .manage-rules-container {
-    max-width: 1000px;
-    margin: 50px auto;
-  }
-  
-  .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .add-rule-btn, .analyze-output-btn {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .search-input {
-    padding: 8px;
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .rules-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .rules-table th, .rules-table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-  }
-  
-  /*
-  .add-rule-form {
-    background-color: white;
-    padding: 20px;
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  .form-group input {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: space-between;
-  }
-  
-  .form-actions button {
-    padding: 10px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .form-actions button:first-child {
-    background-color: #6c757d;
-  }
-  */
-  
-  /* Add and Edit Rule Form Styles */
-  .form-container {
-    background-color: white;
-    padding: 20px;
-    margin-top: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 30px auto;
-  }
-  
-  .form-header {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    color: #333;
-    text-align: center;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .form-group label {
-    font-size: 16px;
-    margin-bottom: 5px;
-    color: #555;
-  }
-  
-  .form-group input,
-  .form-group select {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    transition: border-color 0.3s ease;
-  }
-  
-  .form-group input:focus,
-  .form-group select:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  .form-group input[type="text"],
-  .form-group input[type="number"] {
-    width: 100%;
-  }
-  
-  .form-actions {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 20px;
-  }
-  
-  .form-actions button {
-    padding: 10px 20px;
-    font-size: 16px;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .form-actions .submit-btn {
-    background-color: #28a745;
-  }
-  
-  .form-actions .submit-btn:hover {
-    background-color: #218838;
-  }
-  
-  .form-actions .cancel-btn {
-    background-color: #dc3545;
-  }
-  
-  .form-actions .cancel-btn:hover {
-    background-color: #c82333;
-  }
-  
-  .form-group select {
-    cursor: pointer;
-  }
-  
-  /* Responsive Design */
-  @media (max-width: 768px) {
-    .form-container {
-      padding: 15px;
-      margin: 20px;
-    }
-  
-    .form-header {
-      font-size: 20px;
-    }
-  
-    .form-group input,
-    .form-group select {
-      font-size: 14px;
-    }
-  
-    .form-actions button {
-      font-size: 14px;
-      padding: 8px 15px;
-    }
-  }
-  
+}
+
+/**/
+/**/
+
+
+
+
+
+
+
+
+/*EditRuleForm.js*/
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 20px 40px;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  max-width: 500px;
+  width: 100%;
+  position: relative;
+  z-index: 1000;
+}
+
+.modal-content h3 {
+  margin-top: 10px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #333;
+}
+
+.modal-content label {
+  font-size: 16px;
+  margin-right: 25px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.modal-content input,
+.modal-content select {
+  width: 100%;
+  padding: 8px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s;
+}
+
+.modal-content input:focus,
+.modal-content select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Button Styles */
+.add-sub-btn, .cancel-sub-btn {
+  padding: 6px 15px;
+  border: 2px solid transparent; /* Default border for both buttons */
+  border-radius: 10px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  font-size: 16px; /* Font size */
+}
+
+/* Add Rule Button */
+.add-sub-btn {
+  color:rgb(247, 247, 247);
+  background-color: #28a745; /* Green background */
+}
+
+.add-sub-btn:hover {
+  background-color: #218838; /* Darker green on hover */
+  border-color: #218838; /* Border color matches background */
+}
+
+/* Cancel Button */
+.cancel-sub-btn {
+  color:black;
+  border-color: #218838;
+}
+
+.cancel-sub-btn:hover {
+  background-color: #cdebd0; /* Darker red on hover */
+  border-color: #4cc823; /* Border color matches background */
+}
+
+/* Optional: For better accessibility */
+.add-sub-btn:focus, .cancel-sub-btn:focus {
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add custom focus effect */
+}
+
+
+
+
+
+/**/
+.update-sub-btn, .update-cancel-sub-btn {
+  padding: 6px 15px;
+  border: 2px solid transparent; /* Default border for both buttons */
+  border-radius: 10px;
+  margin-right: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease; /* Smooth transition for hover effects */
+  font-size: 16px; /* Font size */
+}
+
+/* Update Rule Button */
+.update-sub-btn {
+  color:rgb(247, 247, 247);
+  background-color: #284ca7; /* Green background */
+}
+
+.update-sub-btn:hover {
+  background-color: #123576; /* Darker green on hover */
+  border-color: #0d4f6b; /* Border color matches background */
+}
+
+/* Cancel Button */
+.update-cancel-sub-btn {
+  color:black;
+  border-color: #123576;
+}
+
+.update-cancel-sub-btn:hover {
+  background-color: #c6deee; /* Darker red on hover */
+  border-color: #0d4f6b; /* Border color matches background */
+}
+
+/* Optional: For better accessibility */
+.update-sub-btn:focus, .update-cancel-sub-btn:focus {
+  outline: none; /* Remove default outline */
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add custom focus effect */
+}
+
+
