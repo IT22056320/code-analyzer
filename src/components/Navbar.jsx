@@ -4,13 +4,13 @@ import { Nav, Button, Dropdown } from 'react-bootstrap';
 import { AuthContext } from '../context/AuthContext';
 import ToastContext from '../context/ToastContext';
 import { ThemeContext } from '../context/ThemeContext';
-import { FaMoon, FaSun } from 'react-icons/fa';
+import { FaMoon, FaSun } from 'react-icons/fa'; // Import icons for light and dark modes
 import logo from '../assets/logo.png';
 
 const Navbar = ({ title = "LogicLens" }) => {
   const { user, setUser } = useContext(AuthContext);
   const { toast } = useContext(ToastContext);
-  const { isDarkMode, toggleDarkMode, backgroundColor } = useContext(ThemeContext); // Access backgroundColor
+  const { isDarkMode, toggleDarkMode, backgroundColor } = useContext(ThemeContext);
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -20,66 +20,116 @@ const Navbar = ({ title = "LogicLens" }) => {
     navigate("/login", { replace: true });
   };
 
+  // Determine border color for dark mode and light mode
+  const moreDropdownBorderColor = isDarkMode ? '#343a40' : '#5B99C2';
+
   return (
     <nav
-      className={`navbar navbar-expand-lg`}
-      style={{ backgroundColor, color: 'white' }} // Ensure white text color
+      className="navbar navbar-expand-lg"
+      style={{ backgroundColor, color: 'white', padding: '10px 20px' }} // Add padding for better layout
     >
       <div className="container-fluid">
-        <img src={logo} alt="Logo" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
-        <Link to="/home-page" className="navbar-brand" style={{ color: 'white' }}>{title}</Link>
-        <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarDark" aria-controls="navbarDark" aria-expanded="false" aria-label="Toggle navigation">
+        <div className="navbar-brand d-flex align-items-center">
+          <img src={logo} alt="Logo" style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+          <Link to="/home-page" className="navbar-brand" style={{ color: 'white', fontWeight: 'bold', fontSize: '20px' }}>
+            {title}
+          </Link>
+        </div>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarDark"
+          aria-controls="navbarDark"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarDark">
-          <ul className="navbar-nav ms-auto">
+          <ul className="navbar-nav ms-auto d-flex align-items-center">
             {user ? (
               <>
                 <li className="nav-item">
-                  <Nav.Link as={Link} to="/home-page" style={{ marginLeft: '10px', color: 'white' }}>
+                  <Nav.Link as={Link} to="/home-page" style={{ margin: '0 10px', color: 'white' }}>
                     Home
                   </Nav.Link>
                 </li>
                 <li className="nav-item">
-                  <Nav.Link as={Link} to="/" style={{ marginLeft: '10px', color: 'white' }}>
-                    Code Analyzer
+                  <Nav.Link as={Link} to="/" style={{ margin: '0 10px', color: 'white' }}>
+                    Analyzer
                   </Nav.Link>
                 </li>
                 <li className="nav-item">
-                  <Nav.Link as={Link} to="/code-analyzer" style={{ marginLeft: '10px', color: 'white' }}>
+                  <Nav.Link as={Link} to="/code-analyzer" style={{ color: 'white' }}>
                     AI Model
                   </Nav.Link>
                 </li>
                 <li className="nav-item">
-                  <Nav.Link as={Link} to="/project-management" style={{ marginLeft: '10px', color: 'white' }}>
-                    Project Management
+                  <Nav.Link as={Link} to="/project-management" style={{ margin: '0 10px', color: 'white' }}>
+                    Projects
                   </Nav.Link>
                 </li>
-                <li className="nav-item">
-                  <Nav.Link as={Link} to="/resources" style={{ marginLeft: '10px', color: 'white' }}>
-                    Resources
-                  </Nav.Link>
-                </li>
-                <li className="nav-item">
-                  <Nav.Link as={Link} to="/about-us" style={{ marginLeft: '10px', color: 'white' }}>
-                    About Us
-                  </Nav.Link>
-                </li>
+
+                {/* Dropdown for History and Resources */}
                 <li className="nav-item">
                   <Dropdown>
-                    <Dropdown.Toggle variant="outline-secondary" id="dropdown-basic" style={{ marginLeft: '10px', color: 'white' }}>
-                      {isDarkMode ? <FaSun /> : <FaMoon />}
+                    <Dropdown.Toggle
+                      variant="outline-secondary"
+                      id="dropdown-basic"
+                      style={{
+                        marginLeft: '10px',
+                        color: 'white',
+                        borderColor: moreDropdownBorderColor, // Change border color based on theme
+                        padding: '5px 10px',
+                      }}
+                    >
+                      More
                     </Dropdown.Toggle>
 
                     <Dropdown.Menu>
-                      <Dropdown.Item onClick={toggleDarkMode}>
-                        {isDarkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+                      <Dropdown.Item as={Link} to="/history-page">
+                        History
+                      </Dropdown.Item>
+                      <Dropdown.Item as={Link} to="/resources">
+                        Resources
                       </Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                 </li>
+
                 <li className="nav-item">
-                  <Button variant="primary" onClick={handleLogout} style={{ marginLeft: '10px' }}>
+                  <Nav.Link as={Link} to="/about-us" style={{ color: 'white' }}>
+                    About Us
+                  </Nav.Link>
+                </li>
+
+                {/* Dark Mode Toggle with Icon */}
+                <li className="nav-item">
+                  <Button
+                    variant="outline-secondary"
+                    onClick={toggleDarkMode}
+                    style={{
+                      marginLeft: '10px',
+                      color: 'white',
+                      borderColor: 'white',
+                      padding: '5px 10px',
+                    }}
+                  >
+                    {isDarkMode ? <FaSun /> : <FaMoon />}
+                  </Button>
+                </li>
+
+                {/* Logout Button */}
+                <li className="nav-item">
+                  <Button
+                    variant="danger"
+                    onClick={handleLogout}
+                    style={{
+                      marginLeft: '10px',
+                      padding: '5px 15px',
+                    }}
+                  >
                     Logout
                   </Button>
                 </li>
@@ -87,10 +137,10 @@ const Navbar = ({ title = "LogicLens" }) => {
             ) : (
               <>
                 <li className="nav-item">
-                  <Nav.Link as={Link} to="/login" style={{ color: 'white' }}>Login</Nav.Link>
+                  <Nav.Link as={Link} to="/login" style={{ margin: '0 10px', color: 'white' }}>Login</Nav.Link>
                 </li>
                 <li className="nav-item">
-                  <Nav.Link as={Link} to="/register" style={{ color: 'white' }}>Register</Nav.Link>
+                  <Nav.Link as={Link} to="/register" style={{ margin: '0 10px', color: 'white' }}>Register</Nav.Link>
                 </li>
               </>
             )}

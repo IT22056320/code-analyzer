@@ -41,47 +41,55 @@ const OutputAnalysis = () => {
   };
 
   // Function to generate PDF report
-  const generatePDF = () => {
-    const img = new Image();
-    img.src = logo;
-    img.onload = function () {
-      const doc = new jsPDF();
-      const tableColumn = [
-        "Rule ID",
-        "Rule Name",
-        "Description",
-        "Condition",
-        "Threshold",
-        "Status",
-      ];
-      const tableRows = [];
-  
-      // Loop through the rules to create rows for the PDF table
-      rules.forEach((rule) => {
-        const ruleData = [
-          rule.ruleID,
-          rule.ruleName,
-          rule.description,
-          rule.condition,
-          rule.threshold,
-          rule.status,
+  const generatePDF = async () => {
+    try {
+      const response = await fetch(logo);
+      const blob = await response.blob();
+      const reader = new FileReader();
+
+      reader.readAsDataURL(blob);
+      reader.onloadend = function () {
+        const base64data = reader.result;
+
+        const doc = new jsPDF();
+        const tableColumn = [
+          "Rule ID",
+          "Rule Name",
+          "Description",
+          "Condition",
+          "Threshold",
+          "Status",
         ];
-        tableRows.push(ruleData);
-      });
-  
-      // Add the company logo, name, and report title after the image is loaded
-      doc.addImage(img, 'PNG', 10, 10, 30, 30); // Adding logo
-      doc.setFontSize(22);
-      doc.text('LogicLens', 50, 20); // Company name
-      doc.setFontSize(16);
-      doc.text('Rules Report', 50, 30); // Report title
-  
-      // Move the table down to avoid overlap with the header
-      doc.autoTable(tableColumn, tableRows, { startY: 50 });
-      doc.save("rules_report.pdf");
-    };
+        const tableRows = [];
+
+        // Loop through the rules to create rows for the PDF table
+        rules.forEach((rule) => {
+          const ruleData = [
+            rule.ruleID,
+            rule.ruleName,
+            rule.description,
+            rule.condition,
+            rule.threshold,
+            rule.status,
+          ];
+          tableRows.push(ruleData);
+        });
+
+        // Add the company logo, name, and report title after the image is loaded
+        doc.addImage(base64data, "PNG", 10, 10, 30, 30); // Adding logo
+        doc.setFontSize(22);
+        doc.text("LogicLens", 50, 20); // Company name
+        doc.setFontSize(16);
+        doc.text("Rules Report", 50, 30); // Report title
+
+        // Move the table down to avoid overlap with the header
+        doc.autoTable(tableColumn, tableRows, { startY: 50 });
+        doc.save("rules_report.pdf");
+      };
+    } catch (error) {
+      console.error("Error fetching or processing the image:", error);
+    }
   };
-  
 
   return (
     <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
@@ -95,43 +103,25 @@ const OutputAnalysis = () => {
       >
         <thead>
           <tr>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>RuleID</th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Rule Name
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Description
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Condition
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>
-              Threshold
-            </th>
-            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Status</th>
+            <th style={{ border: "1px solid #000000", padding: "8px" }}>RuleID</th>
+            <th style={{ border: "1px solid #000000", padding: "8px" }}>Rule Name</th>
+            <th style={{ border: "1px solid #000000", padding: "8px" }}>Description</th>
+            <th style={{ border: "1px solid #000000", padding: "8px" }}>Condition</th>
+            <th style={{ border: "1px solid #000000", padding: "8px" }}>Threshold</th>
+            <th style={{ border: "1px solid #000000", padding: "8px" }}>Status</th>
           </tr>
         </thead>
         <tbody>
           {rules.map((rule) => (
             <tr key={rule._id}>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {rule.ruleID}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {rule.ruleName}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {rule.description}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {rule.condition}
-              </td>
-              <td style={{ border: "1px solid #ddd", padding: "8px" }}>
-                {rule.threshold}
-              </td>
+              <td style={{ border: "1px solid #000000", padding: "8px" }}>{rule.ruleID}</td>
+              <td style={{ border: "1px solid #000000", padding: "8px" }}>{rule.ruleName}</td>
+              <td style={{ border: "1px solid #000000", padding: "8px" }}>{rule.description}</td>
+              <td style={{ border: "1px solid #000000", padding: "8px" }}>{rule.condition}</td>
+              <td style={{ border: "1px solid #000000", padding: "8px" }}>{rule.threshold}</td>
               <td
                 style={{
-                  border: "1px solid #ddd",
+                  border: "1px solid #000000",
                   padding: "8px",
                   fontWeight: "bold",
                   color: rule.status === "active" ? "green" : "red",
@@ -161,7 +151,6 @@ const OutputAnalysis = () => {
           Generate PDF Report
         </button>
 
-        {/* Button to trigger modal */}
         <button
           onClick={() => setShowModal(true)}
           style={{

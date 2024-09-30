@@ -16,6 +16,7 @@ import AboutUs from './pages/AboutUs';
 import Resources from './pages/Resources';
 import AnalysisGraph from './pages/AnalysisGraph';
 import "./styles.css";
+import HistoryPage from './pages/HistoryPage';
 
 const App = () => {
   return (
@@ -35,6 +36,8 @@ const App = () => {
               <Route path="/about-us" element={<AboutUs />} />
               <Route path="/resources" element={<Resources />} />
               <Route path="/analysis-graph" element={<AnalysisGraph />} />
+              <Route path="/history" element={<History />} />
+              <Route path="/history-page" element={<HistoryPage />} />
             </Switch>
           </Layout>
         </ThemeProvider>

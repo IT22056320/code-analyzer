@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
 
 const AboutUs = () => {
+  const [hovered, setHovered] = useState(null); // State to track the hovered card
+
+  // Function to handle hover effects
+  const handleMouseEnter = (index) => {
+    setHovered(index);
+  };
+
+  const handleMouseLeave = () => {
+    setHovered(null);
+  };
+
+  // Dynamic styles for each card
+  const cardStyle = (index) => ({
+    borderRadius: '15px',
+    border: `2px solid ${hovered === index ? '#007bff' : 'transparent'}`,
+    transition: 'all 0.3s ease',
+    boxShadow: hovered === index ? '0 8px 16px rgba(0, 123, 255, 0.4)' : '0 4px 8px rgba(0, 0, 0, 0.1)',
+    transform: hovered === index ? 'translateY(-5px)' : 'translateY(0)',
+  });
+
   return (
     <Container>
       {/* About Us Header Section */}
@@ -17,7 +37,12 @@ const AboutUs = () => {
       {/* Vision Section */}
       <Row>
         <Col>
-          <Card className="mb-4" style={{ borderRadius: '15px' }}>
+          <Card
+            className="mb-4"
+            style={cardStyle(1)}
+            onMouseEnter={() => handleMouseEnter(1)}
+            onMouseLeave={handleMouseLeave}
+          >
             <Card.Body>
               <h2>Our Vision</h2>
               <p>
@@ -33,7 +58,12 @@ const AboutUs = () => {
       {/* Mission Section */}
       <Row>
         <Col>
-          <Card className="mb-4" style={{ borderRadius: '15px' }}>
+          <Card
+            className="mb-4"
+            style={cardStyle(2)}
+            onMouseEnter={() => handleMouseEnter(2)}
+            onMouseLeave={handleMouseLeave}
+          >
             <Card.Body>
               <h2>Our Mission</h2>
               <p>
@@ -49,7 +79,12 @@ const AboutUs = () => {
       {/* Values Section */}
       <Row>
         <Col>
-          <Card className="mb-4" style={{ borderRadius: '15px' }}>
+          <Card
+            className="mb-4"
+            style={cardStyle(3)}
+            onMouseEnter={() => handleMouseEnter(3)}
+            onMouseLeave={handleMouseLeave}
+          >
             <Card.Body>
               <h2>Our Core Values</h2>
               <ul>
@@ -66,7 +101,12 @@ const AboutUs = () => {
       {/* Team Section */}
       <Row>
         <Col>
-          <Card className="mb-4" style={{ borderRadius: '15px' }}>
+          <Card
+            className="mb-4"
+            style={cardStyle(4)}
+            onMouseEnter={() => handleMouseEnter(4)}
+            onMouseLeave={handleMouseLeave}
+          >
             <Card.Body>
               <h2>Meet the Team</h2>
               <p>
@@ -80,7 +120,12 @@ const AboutUs = () => {
       {/* Call to Action Section */}
       <Row>
         <Col>
-          <Card className="mb-4" style={{ borderRadius: '15px' }}>
+          <Card
+            className="mb-4"
+            style={cardStyle(5)}
+            onMouseEnter={() => handleMouseEnter(5)}
+            onMouseLeave={handleMouseLeave}
+          >
             <Card.Body>
               <h2>Join Us on Our Journey</h2>
               <p>

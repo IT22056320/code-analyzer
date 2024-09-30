@@ -24,18 +24,18 @@ const Footer = () => {
               <li><Link to="/" style={{ color: 'white' }}>Home</Link></li>
               <li><Link to="/features" style={{ color: 'white' }}>Features</Link></li>
               <li><Link to="/pricing" style={{ color: 'white' }}>Pricing</Link></li>
-              <li><Link to="/about" style={{ color: 'white' }}>About Us</Link></li>
-              <li><Link to="/contact" style={{ color: 'white' }}>Contact</Link></li>
-              <li><Link to="/blog" style={{ color: 'white' }}>Blog</Link></li>
+              <li><Link to="/about-us" style={{ color: 'white' }}>About Us</Link></li>
+              <li><Link to="/about-us" style={{ color: 'white' }}>Contact</Link></li>
+              <li><Link to="/about-us" style={{ color: 'white' }}>Blog</Link></li>
             </ul>
           </div>
           <div className="col-md-3">
             <p>Services</p>
             <ul className="list-unstyled">
-              <li><Link to="/code-analysis" style={{ color: 'white' }}>Code Analysis</Link></li>
-              <li><Link to="/security-check" style={{ color: 'white' }}>Security Check</Link></li>
-              <li><Link to="/performance-review" style={{ color: 'white' }}>Performance Review</Link></li>
-              <li><Link to="/custom-reports" style={{ color: 'white' }}>Custom Reports</Link></li>
+              <li><Link to="/" style={{ color: 'white' }}>Code Analysis</Link></li>
+              <li><Link to="/code-analyzer" style={{ color: 'white' }}>AI Model</Link></li>
+              <li><Link to="/manage-rules" style={{ color: 'white' }}>Rules</Link></li>
+              <li><Link to="/project-management" style={{ color: 'white' }}>Project Management</Link></li>
             </ul>
           </div>
           <div className="col-md-3">
