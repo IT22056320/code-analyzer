@@ -300,7 +300,7 @@ const Home = () => {
                         <OverlayTrigger
                           placement="right"
                           delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltip(null, "Cyclomatic complexity measures the number of independent paths through a program's source code...")}
+                          overlay={renderTooltip(null, "Cyclomatic complexity measures the number of independent paths through a program's source code. It represents the number of decision points, such as if statements and loops. This metric helps assess the complexity of the code, guiding how many test cases are needed and indicating the potential difficulty in maintaining and understanding the code.\n\n1–10: Simple code, easy to maintain.\n11–20: Moderate complexity, may need some additional testing or refactoring.\n21–50: High complexity, code is becoming harder to maintain and test.\n50+: Very complex, likely to be error-prone and challenging to work with.")}
                         >
                           <p><strong>Cyclomatic Complexity:</strong> {analysisResult.cyclomaticComplexity}</p>
                         </OverlayTrigger>
@@ -308,7 +308,7 @@ const Home = () => {
                         <OverlayTrigger
                           placement="right"
                           delay={{ show: 250, hide: 400 }}
-                          overlay={renderTooltip(null, "The maintainability index is a score ranging from 0 to 100 that quantifies how easy it is to maintain a piece of code...")}
+                          overlay={renderTooltip(null, "The maintainability index is a score ranging from 0 to 100 that quantifies how easy it is to maintain a piece of code. It combines various factors including cyclomatic complexity, lines of code, and other code metrics to provide an overall measure of code maintainability.\n\n0-20: Very difficult to maintain. Code is likely to be complex, poorly structured, and challenging to understand.\n21-40: Difficult to maintain. Code may require significant effort to modify or extend.\n41-60: Moderate maintainability. Code is manageable but could benefit from refactoring.\n61-80: Easy to maintain. Code is well-structured and should be relatively straightforward to work with.\n81-100: Very easy to maintain. Code is clear, well-organized, and easy to understand. Higher scores indicate better maintainability, meaning that the code is less likely to contain hidden bugs and is easier for developers to work with.")}
                         >
                           <p><strong>Maintainability Index:</strong> {analysisResult.maintainabilityIndex}</p>
                         </OverlayTrigger>
