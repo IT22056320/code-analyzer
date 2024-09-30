@@ -1,6 +1,6 @@
 /* src/styles.css */
-/*ManageRules.js*/
 
+/* ManageRules.js */
 .manage-rules-container {
   max-width: 1200px;
   margin: 40px auto;
@@ -57,6 +57,7 @@
   border-collapse: collapse;
   margin-top: 20px;
 }
+
 .rules-table th {
   background-color: #f2f2f2;
 }
@@ -78,9 +79,9 @@
   border-radius: 6px;
   cursor: pointer;
   font-size: 12px;
-  color:black;
+  color: black;
   transition: all 0.3s ease;
-  /*background-color: transparent;*/
+  /* background-color: transparent; */
   font-weight: bold; /* No background color */
 }
 
@@ -95,6 +96,7 @@
   background-color: #8e7c25;
   color: white;
 }
+
 /* Update Button Styling */
 .update-btn {
   border: 2px solid #007bff;
@@ -191,17 +193,7 @@
   }
 }
 
-/**/
-/**/
-
-
-
-
-
-
-
-
-/*EditRuleForm.js*/
+/* EditRuleForm.js */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -270,7 +262,7 @@
 
 /* Add Rule Button */
 .add-sub-btn {
-  color:rgb(247, 247, 247);
+  color: rgb(247, 247, 247);
   background-color: #28a745; /* Green background */
 }
 
@@ -281,7 +273,7 @@
 
 /* Cancel Button */
 .cancel-sub-btn {
-  color:black;
+  color: black;
   border-color: #218838;
 }
 
@@ -296,11 +288,7 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add custom focus effect */
 }
 
-
-
-
-
-/**/
+/* Update Button Styles */
 .update-sub-btn, .update-cancel-sub-btn {
   padding: 6px 15px;
   border: 2px solid transparent; /* Default border for both buttons */
@@ -313,7 +301,7 @@
 
 /* Update Rule Button */
 .update-sub-btn {
-  color:rgb(247, 247, 247);
+  color: rgb(247, 247, 247);
   background-color: #284ca7; /* Green background */
 }
 
@@ -324,7 +312,7 @@
 
 /* Cancel Button */
 .update-cancel-sub-btn {
-  color:black;
+  color: black;
   border-color: #123576;
 }
 
@@ -339,4 +327,29 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Add custom focus effect */
 }
 
+/* Dark mode styles */
+body.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
 
+.navbar-dark {
+  background-color: #343a40;
+}
+
+.navbar-light {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.text-light {
+  color: #ffffff; /* Light text for dark mode */
+}
+
+.text-dark {
+  color: #000000; /* Dark text for light mode */
+}
+
+body{
+  background:#e1eaf0;
+}
