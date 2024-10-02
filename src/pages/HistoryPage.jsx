@@ -8,7 +8,7 @@ const HistoryPage = () => {
   const [showModal, setShowModal] = useState(false);
 
   // GitHub Access Token (consider moving it to .env file for security)
-  const githubAccessToken = process.env.REACT_APP_GITHUB_ACCESS_TOKEN;
+  const githubAccessToken = "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";
 
   useEffect(() => {
     const fetchHistory = async () => {
