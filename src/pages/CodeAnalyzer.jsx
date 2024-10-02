@@ -201,7 +201,7 @@ const CodeAnalyzer = () => {
   return (
     <Container className="mt-5">
       <Row>
-        <Col md={8} className="mx-auto">
+        <Col md={14} className="mx-auto">
           <div style={{ backgroundColor: '#5B99C2', borderRadius: '20px', padding: '20px', boxShadow: '0px 8px 20px rgba(0,0,0,0.15)', transform: 'translateZ(0)' }}>
             <Card className="border-0 mb-4" style={{ borderRadius: '20px', backgroundColor: '#D1E9F6', boxShadow: '0px 4px 15px rgba(0,0,0,0.2)' }}>
               <Card.Header className="text-center" style={{ backgroundColor: '#1A4870', color: '#fff', borderRadius: '20px 20px 0 0', boxShadow: '0px 4px 10px rgba(0,0,0,0.2)' }}>

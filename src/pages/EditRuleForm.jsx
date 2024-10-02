@@ -1,156 +1,149 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
+// Validation schema using Yup
+const validationSchema = Yup.object().shape({
+  ruleName: Yup.string().required("Rule name is required."),
+  description: Yup.string().required("Description is required."),
+  condition: Yup.string().required("Condition is required."),
+  threshold: Yup.number().required("Threshold is required."),
+});
 
 const EditRuleForm = ({ rule, updateRule, cancelEdit }) => {
-  const [ruleName, setRuleName] = useState(rule.ruleName);
-  const [description, setDescription] = useState(rule.description);
-  const [condition, setCondition] = useState(rule.condition);
-  const [threshold, setThreshold] = useState(rule.threshold);
-  const [status, setStatus] = useState(rule.status);
+  const handleUpdate = async (values, { setSubmitting }) => {
+    const updatedRule = { ...values };
 
-  const handleUpdate = (e) => {
-    e.preventDefault();
-    const updatedRule = { ruleName, description, condition, threshold, status };
-    updateRule(rule._id, updatedRule); // Call the update function
-  };
+    try {
+      // Perform the update using fetch API
+      const response = await fetch(`http://localhost:4000/api/${rule._id}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedRule),
+      });
 
-  useEffect(() => {
-    setRuleName(rule.ruleName);
-    setCondition(rule.condition);
-    setThreshold(rule.threshold);
-    setDescription(rule.description);
-    setStatus(rule.status);
-  }, [rule]);
+      if (!response.ok) {
+        throw new Error(`Error: ${response.statusText}`);
+      }
 
-  // Inline styles
-  const formContainerStyle = {
-    backgroundColor: "white",
-    padding: "20px",
-    marginTop: "20px",
-    border: "1px solid #ddd",
-    borderRadius: "8px",
-    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-    maxWidth: "600px",
-    margin: "30px auto",
-  };
-
-  const formHeaderStyle = {
-    fontSize: "24px",
-    fontWeight: "bold",
-    marginBottom: "20px",
-    color: "#333",
-    textAlign: "center",
-  };
-
-  const formGroupStyle = {
-    marginBottom: "15px",
-    display: "flex",
-    flexDirection: "column",
-  };
-
-  const labelStyle = {
-    fontSize: "16px",
-    marginBottom: "5px",
-    color: "#555",
-  };
-
-  const inputStyle = {
-    padding: "10px",
-    fontSize: "16px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    transition: "border-color 0.3s ease",
-    width: "100%",
-  };
-
-  const selectStyle = {
-    padding: "10px",
-    fontSize: "16px",
-    border: "1px solid #ccc",
-    borderRadius: "4px",
-    cursor: "pointer",
-  };
-
-  const buttonStyle = {
-    padding: "10px 20px",
-    fontSize: "16px",
-    color: "white",
-    border: "none",
-    borderRadius: "4px",
-    cursor: "pointer",
-    marginRight: "10px",
-    transition: "background-color 0.3s ease",
-  };
-
-  const updateButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "#28a745",
-  };
-
-  const cancelButtonStyle = {
-    ...buttonStyle,
-    backgroundColor: "#dc3545",
+      const data = await response.json();
+      updateRule(rule._id, data); // Call the update function passed as a prop
+      setSubmitting(false); // Enable the submit button again
+    } catch (error) {
+      console.error("Error updating rule:", error);
+      setSubmitting(false); // Enable the submit button again
+    }
   };
 
   return (
-    <div style={formContainerStyle}>
-      <form onSubmit={handleUpdate}>
-        <h2 style={formHeaderStyle}>Edit Rule</h2>
-        <div style={formGroupStyle}>
-          <label style={labelStyle}>Rule Name:</label>
-          <input
-            type="text"
-            value={ruleName}
-            onChange={(e) => setRuleName(e.target.value)}
-            style={inputStyle}
-          />
-        </div>
-        <div style={formGroupStyle}>
-          <label style={labelStyle}>Description:</label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            style={inputStyle}
-          />
-        </div>
-        <div style={formGroupStyle}>
-          <label style={labelStyle}>Condition:</label>
-          <input
-            type="text"
-            value={condition}
-            onChange={(e) => setCondition(e.target.value)}
-            style={inputStyle}
-          />
-        </div>
-        <div style={formGroupStyle}>
-          <label style={labelStyle}>Threshold:</label>
-          <input
-            type="number"
-            value={threshold}
-            onChange={(e) => setThreshold(e.target.value)}
-            style={inputStyle}
-          />
-        </div>
-        <div style={formGroupStyle}>
-          <label style={labelStyle}>Status:</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-            style={selectStyle}
-          >
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-          </select>
-        </div>
-        <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <button type="submit" style={updateButtonStyle}>
-            Update Rule
-          </button>
-          <button type="button" onClick={cancelEdit} style={cancelButtonStyle}>
-            Cancel
-          </button>
-        </div>
-      </form>
+    <div className="modal-overlay">
+      <div className="modal-content">
+        <h2>Edit Rule</h2>
+        <Formik
+          initialValues={{
+            ruleName: rule.ruleName,
+            description: rule.description,
+            condition: rule.condition,
+            threshold: rule.threshold,
+            status: rule.status,
+          }}
+          validationSchema={validationSchema}
+          onSubmit={handleUpdate}
+        >
+          {({ isValid, dirty, isSubmitting }) => (
+            <Form>
+              <div style={{ marginBottom: "20px" }}>
+                <label>Rule Name:</label>
+                <Field
+                  type="text"
+                  name="ruleName"
+                  placeholder="Enter rule name"
+                  style={{ display: "block", marginBottom: "5px" }}
+                />
+                <ErrorMessage
+                  name="ruleName"
+                  component="div"
+                  className="error-message"
+                  style={{ color: "red", marginTop: "-5px", fontSize: "0.9em" }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label>Description:</label>
+                <Field
+                  type="text"
+                  name="description"
+                  placeholder="Enter description"
+                  style={{ display: "block", marginBottom: "5px" }}
+                />
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="error-message"
+                  style={{ color: "red", marginTop: "-5px", fontSize: "0.9em" }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label>Condition:</label>
+                <Field
+                  type="text"
+                  name="condition"
+                  placeholder="Enter condition"
+                  style={{ display: "block", marginBottom: "5px" }}
+                />
+                <ErrorMessage
+                  name="condition"
+                  component="div"
+                  className="error-message"
+                  style={{ color: "red", marginTop: "-5px", fontSize: "0.9em" }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label>Threshold:</label>
+                <Field
+                  type="number"
+                  name="threshold"
+                  placeholder="Enter threshold"
+                  style={{ display: "block", marginBottom: "5px" }}
+                />
+                <ErrorMessage
+                  name="threshold"
+                  component="div"
+                  className="error-message"
+                  style={{ color: "red", marginTop: "-5px", fontSize: "0.9em" }}
+                />
+              </div>
+
+              <div style={{ marginBottom: "20px" }}>
+                <label>Status:</label>
+                <Field as="select" name="status" style={{ display: "block", marginBottom: "5px" }}>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                </Field>
+              </div>
+
+              <button
+                type="submit"
+                className="update-sub-btn"
+                disabled={isSubmitting || !(isValid && dirty)} // Disable if the form is invalid or unchanged
+              >
+                {isSubmitting ? "Updating..." : "Update Rule"}
+              </button>
+              <button
+                type="button"
+                className="update-cancel-sub-btn"
+                onClick={cancelEdit}
+              >
+                Cancel
+              </button>
+            </Form>
+          )}
+        </Formik>
+      </div>
     </div>
   );
 };

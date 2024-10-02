@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Button, Form, Card, Modal, Row, Col, Container } from 'react-bootstrap';
 import { FaPlus, FaEdit, FaTrash, FaFolderPlus } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable'; // Import jsPDF Autotable plugin for tables
+import logo from "../assets/logo.png"; // Assuming your logo is here
 
 const ProjectManagement = () => {
   const [projects, setProjects] = useState([]);
@@ -11,7 +14,7 @@ const ProjectManagement = () => {
   const [editFolderId, setEditFolderId] = useState(null);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [showFolderModal, setShowFolderModal] = useState(false);
-  const [activeProjectId, setActiveProjectId] = useState(null); // Track which project to add folder to
+  const [activeProjectId, setActiveProjectId] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -176,6 +179,71 @@ const ProjectManagement = () => {
     }
   };
 
+  // PDF Generation function
+ // PDF Generation function for Project Management
+const generatePDF = () => {
+  const img = new Image();
+  img.src = logo; // Assuming the logo is in the assets folder and already imported
+  img.onload = function () {
+    const doc = new jsPDF();
+
+    // Add the company logo, name, and report title
+    doc.addImage(img, 'PNG', 10, 10, 30, 30); // Adding logo
+    doc.setFontSize(22);
+    doc.text('LogicLens', 50, 20); // Company name
+    doc.setFontSize(16);
+    doc.text('Project and Folder Report', 50, 30); // Report title
+
+    // Add current date
+    const currentDate = new Date().toLocaleDateString();
+    doc.setFontSize(10);
+    doc.text(`Report Generated on: ${currentDate}`, 50, 40);
+
+    // Summary Section
+    doc.setFontSize(16);
+    doc.text('Summary', 20, 50);
+
+    const numberOfProjects = projects.length;
+    const numberOfFolders = projects.reduce(
+      (total, project) => total + project.folders.length,
+      0
+    );
+
+    doc.setFontSize(12);
+    doc.text(`Total Projects: ${numberOfProjects}`, 20, 60);
+    doc.text(`Total Folders: ${numberOfFolders}`, 20, 70);
+
+    // Table Data Preparation
+    const tableData = [];
+    projects.forEach((project) => {
+      tableData.push([project.name, '', new Date(project.createdAt).toLocaleDateString()]); // Assuming 'createdAt' is available for projects
+      project.folders.forEach((folder) => {
+        tableData.push(['', folder.name, new Date(folder.createdAt).toLocaleDateString()]); // Assuming 'createdAt' is available for folders
+      });
+    });
+
+    // Adding Table
+    doc.autoTable({
+      head: [['Project Name', 'Folder Name', 'Created Date']],
+      body: tableData,
+      startY: 80, // To prevent overlap with the summary
+    });
+
+    // Footer with Page Numbers
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFontSize(10);
+      doc.text(`Page ${i} of ${pageCount}`, doc.internal.pageSize.width - 30, doc.internal.pageSize.height - 10);
+    }
+
+    // Save the PDF
+    doc.save('project-folder-report.pdf');
+  };
+};
+
+  
+
   const navigateToHome = () => {
     navigate(`/`);
   };
@@ -289,6 +357,13 @@ const ProjectManagement = () => {
           </Button>
         </Modal.Footer>
       </Modal>
+
+      {/* Button to generate PDF */}
+      <div className="mt-4">
+        <Button onClick={generatePDF} variant="success">
+          Generate PDF
+        </Button>
+      </div>
     </Container>
   );
 };
